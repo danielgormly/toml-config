@@ -1,0 +1,24 @@
+{
+  "name": "toml-config",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "prepublishOnly": "pnpm run build",
+    "test": "ava test/load.spec.ts",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "toml": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.20",
+    "ava": "^6.1.1",
+    "tsimp": "^2.0.11",
+    "typescript": "^5.3.3"
+  }
+}

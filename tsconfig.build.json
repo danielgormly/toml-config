@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "checkJs": false,
+    "outDir": "dist",
+    "strict": false,
+    "typeRoots": ["./node_modules/@types"],
+    "declaration": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "files": [
+    "src/main.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

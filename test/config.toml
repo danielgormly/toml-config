@@ -1,0 +1,7 @@
+string = "string"
+number = 1
+bool_false = false
+
+[nested]
+nested_text = 'yo'
+nested_number = 4
