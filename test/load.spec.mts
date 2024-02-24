@@ -2,6 +2,8 @@ import test from 'tape';
 import { loadToml, validateConfig } from '../src/main.mjs';
 import { parse as parseToml } from 'toml';
 
+console.log('wtha the fuck');
+
 test('Loading a complex test file', (t) => {
   interface Config {
     string: string

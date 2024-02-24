@@ -1,6 +1,6 @@
 {
   "name": "toml-config",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A simple Typescript/Javascript package for loading & validating configuration from toml files and validate against a schema.",
   "main": "dist/cjs/main.js",
   "module": "dist/esm/main.js",
@@ -13,12 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "toml": "^3.0.0",
-    "tsimp": "^2.0.11"
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",
     "tape": "^5.7.5",
+    "tsimp": "^2.0.11",
     "typescript": "^5.3.3"
   }
 }

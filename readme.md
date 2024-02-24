@@ -12,7 +12,7 @@ ESM & CJS versions compiled.
 # Drawbacks
 There is no static type inference on the validator to avoid complexity & dependencies. Therefore config type must be manually typed. Type mistakes therefore are possible in consumption of config. Use [toml](https://www.npmjs.com/package/toml) + [zod](https://zod.dev/), [suretype](https://github.com/grantila/suretype) etc to construct a fully type-safe version yourself. I run many commercial services on this model, avoiding nested config and find this level of safety adequate.
 
-# Install
+## Installing
 ```bash
 npm install toml-config
 ```
@@ -20,7 +20,7 @@ npm install toml-config
 ## Usage
 Write a schema, output config type, load toml file, validate & export.
 
-config.toml
+**config.toml**
 ```toml
 environment = "test"
 [database]
@@ -28,6 +28,7 @@ host = 'localhost'
 port = 5432
 ```
 
+**config.ts**
 ```typescript
 import { loadToml, validateConfig } from 'toml-config';
 // n.b. config is manually typed and only compared that top-level properties are present.
