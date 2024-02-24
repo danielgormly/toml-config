@@ -1,5 +1,5 @@
-import test from 'ava';
-import { loadToml, validateConfig } from '../src/main.js';
+import test from 'tape';
+import { loadToml, validateConfig } from '../src/main.mjs';
 import { parse as parseToml } from 'toml';
 
 test('Loading a complex test file', (t) => {
@@ -41,6 +41,7 @@ test('Loading a complex test file', (t) => {
   t.is(config.bool_false, false, 'overriding default true with false');
   t.is(config.nested.nested_number, 4, 'works?');
   t.is(config.nested.nested_default, 7, 'works?');
+  t.end();
 });
 
 test('Invalid type in config', (t) => {
@@ -53,8 +54,9 @@ test('Invalid type in config', (t) => {
       string: { type: 'string' },
     }, rawConfig);
   } catch (err) {
-    t.truthy(err, 'throws correctly due to invalid type');
+    t.ok(err, 'throws correctly due to invalid type');
   }
+  t.end();
 });
 
 test('missing item in config', (t) => {
@@ -67,6 +69,7 @@ test('missing item in config', (t) => {
       string: { type: 'string' },
     }, rawConfig);
   } catch (err) {
-    t.truthy(err, 'throws correctly due to invalid type');
+    t.ok(err, 'throws correctly due to invalid type');
   }
+  t.end();
 });

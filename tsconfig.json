@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "checkJs": false,
+    "esModuleInterop": true,
     "outDir": "dist",
     "strict": false,
     "typeRoots": ["./node_modules/@types"],
@@ -12,10 +13,10 @@
     "allowSyntheticDefaultImports": true
   },
   "files": [
-    "src/main.ts"
+    "src/main.mts"
   ],
   "include": [
-    "test/**/*.spec.ts"
+    "test/**/*.spec.mts"
   ],
   "exclude": [
     "node_modules"

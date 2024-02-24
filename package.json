@@ -1,25 +1,24 @@
 {
   "name": "toml-config",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "A simple Typescript/Javascript package for loading & validating configuration from toml files and validate against a schema.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "type": "module",
+  "main": "dist/cjs/main.js",
+  "module": "dist/esm/main.js",
   "scripts": {
-    "prepublishOnly": "pnpm run build",
-    "test": "ava test/load.spec.ts",
+    "prepublishOnly": "pnpm run test && pnpm run build",
+    "test": "tsimp test/load.spec.mts",
     "build": "tsc -p tsconfig.es.json && tsc -p tsconfig.cjs.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "toml": "^3.0.0"
+    "toml": "^3.0.0",
+    "tsimp": "^2.0.11"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",
-    "ava": "^6.1.1",
-    "tsimp": "^2.0.11",
+    "tape": "^5.7.5",
     "typescript": "^5.3.3"
   }
 }

@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true
   },
   "files": [
-    "src/main.ts"
+    "src/main.mts"
   ],
   "exclude": [
     "node_modules"
