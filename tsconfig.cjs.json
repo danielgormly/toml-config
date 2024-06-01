@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist/cjs",
-    "module": "CommonJS",
+    "module": "commonjs",
     "target": "ES5",
     "checkJs": false,
     "strict": false,
