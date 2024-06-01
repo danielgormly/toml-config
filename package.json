@@ -6,7 +6,7 @@
   "module": "dist/esm/main.js",
   "type":"commonjs",
   "scripts": {
-    "prepublishOnly": "pnpm run test && mv.sh && pnpm run build",
+    "prepublishOnly": "pnpm run test && pnpm run build && ./mv.sh",
     "test": "tsimp test/load.spec.mts",
     "build": "tsc -p tsconfig.es.json && tsc -p tsconfig.cjs.json"
   },
