@@ -9,7 +9,7 @@ ESM & CJS versions published.
 - number
 - object type supports nested schemas
 
-# Drawbacks
+## Drawbacks
 There is no static type inference on the validator to avoid complexity & dependencies. Therefore config type must be manually typed. Type mistakes therefore are possible in consumption of config. Use [toml](https://www.npmjs.com/package/toml) + [zod](https://zod.dev/), [suretype](https://github.com/grantila/suretype) etc to construct a fully type-safe version yourself. I run many commercial services on this model, avoiding nested config and find this level of safety adequate.
 
 ## Installing
@@ -64,3 +64,6 @@ export const config = validateConfig<Config>(schema);
 // Relative path to current file
 const rawConfig = loadToml(`file://${__dirname}`, './config.toml');
 ```
+
+## Missing types in coding editor?
+I'm using the package.json:exports field to export the library. I needed to import the entry file directly `import { loadToml } from "toml-config/dist/cjs/main.cjs"` in Zed to get type support in the editor.

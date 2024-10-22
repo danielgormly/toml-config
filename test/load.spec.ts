@@ -1,5 +1,5 @@
 import test from "tape";
-import { loadToml, validateConfig } from "../src/main.js";
+import { loadToml, validateConfig } from "../dist/cjs/main.cjs";
 import { parse as parseToml } from "toml";
 
 test("Loading a complex test file", (t) => {
