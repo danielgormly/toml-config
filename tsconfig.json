@@ -6,19 +6,14 @@
     "checkJs": false,
     "esModuleInterop": true,
     "outDir": "dist",
-    "strict": false,
-    "typeRoots": ["./node_modules/@types"],
+    "strict": true,
+    "typeRoots": ["node_modules/@types", "./types"],
+    "types": ["node", "tape"],
     "declaration": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true
   },
-  "files": [
-    "src/main.mts"
-  ],
-  "include": [
-    "test/**/*.spec.mts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "files": ["src/main.ts", "test/load.spec.ts"],
+  "include": ["test/**/*.spec.ts"],
+  "exclude": ["node_modules"]
 }

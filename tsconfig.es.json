@@ -5,16 +5,12 @@
     "moduleResolution": "NodeNext",
     "checkJs": false,
     "outDir": "./dist/es",
-    "strict": false,
+    "strict": true,
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true
   },
-  "files": [
-    "src/main.mts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "files": ["src/main.ts"],
+  "exclude": ["node_modules"]
 }

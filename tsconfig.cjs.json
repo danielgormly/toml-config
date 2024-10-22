@@ -4,16 +4,13 @@
     "module": "commonjs",
     "target": "ES5",
     "checkJs": false,
-    "strict": false,
+    "strict": true,
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
-  "files": [
-    "src/main.mts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "files": ["src/main.ts"],
+  "exclude": ["node_modules"]
 }
