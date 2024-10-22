@@ -7,7 +7,10 @@
   "exports": {
     ".": {
       "import": "./dist/esm/main.js",
-      "require": "./dist/cjs/main.cjs"
+      "require": {
+        "default": "./dist/cjs/main.cjs",
+        "types": "./dist/cjs/main.d.cts"
+      }
     }
   },
   "type": "module",
