@@ -1,8 +1,8 @@
 # toml-config
 
-A simple, typed package for loading & validating configuration from toml files and validate against a schema. Useful for 12-factor deployments. Only dependency is toml-parser. Toml properties not present in schema are discarded.
+A simple, typed package for loading & validating configuration from toml files and validate against a schema. Useful for 12-factor deployments. Only dependency is toml. Toml properties not present in schema are discarded.
 
-ESM & CJS versions compiled.
+ESM & CJS versions published.
 
 ## Schema definition
 - string
