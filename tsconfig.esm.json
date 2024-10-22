@@ -4,7 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "checkJs": false,
-    "outDir": "./dist/es",
+    "outDir": "./dist/esm",
     "strict": true,
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,

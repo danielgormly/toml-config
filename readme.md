@@ -64,6 +64,3 @@ export const config = validateConfig<Config>(schema);
 // Relative path to current file
 const rawConfig = loadToml(`file://${__dirname}`, './config.toml');
 ```
-
-## Missing types in coding editor?
-I'm using the package.json:exports field to export the library. I needed to import the entry file directly `import { loadToml } from "toml-config/dist/cjs/main.cjs"` in Zed to get type support in the editor.
