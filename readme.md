@@ -1,6 +1,8 @@
 # toml-config
 
-A simple, package for loading & validating toml files and validating against a schema, with static type inference. Useful for configuration app deployments in a 12-factor environment. Only dependency is toml. Properties not present in schema are discarded.
+[![CI](https://github.com/danielgormly/toml-config/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/danielgormly/toml-config/actions/workflows/ci.yml)
+
+A simple, package for loading & validating toml files and validating against a schema, with static type inference so the resulting config item is typed. Useful for configuration files for app deployments in 12-factor style. Only dependency is toml. Properties not present in schema are discarded.
 
 Both ESM & CJS versions published.
 
