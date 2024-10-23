@@ -1,5 +1,5 @@
 import test from "tape";
-import { loadToml, validateConfig } from "../dist/cjs/main.cjs";
+import { loadToml, validateConfig } from "../src/main.js";
 import { parse as parseToml } from "toml";
 
 test("Loading a complex test file", (t) => {
@@ -14,6 +14,11 @@ test("Loading a complex test file", (t) => {
       nested_text: string;
       nested_number: number;
       nested_default: number;
+      deeper: {
+        deep_nested_text: string;
+        deep_nested_number: number;
+        deep_nested_bool: number;
+      };
     };
   }
   // Load from file
@@ -32,6 +37,14 @@ test("Loading a complex test file", (t) => {
           nested_text: { type: "string" },
           nested_number: { type: "number" },
           nested_default: { type: "number", default: 7 },
+          deeper: {
+            type: "object",
+            properties: {
+              deep_nested_text: { type: "string" },
+              deep_nested_number: { type: "number" },
+              deep_nested_bool: { type: "boolean", default: false },
+            },
+          },
         },
       },
     },
@@ -44,6 +57,9 @@ test("Loading a complex test file", (t) => {
   t.is(config.bool_false, false, "overriding default true with false");
   t.is(config.nested.nested_number, 4, "works?");
   t.is(config.nested.nested_default, 7, "works?");
+  t.is(config.nested.deeper.deep_nested_text, "hello", "works");
+  t.is(config.nested.deeper.deep_nested_number, 42, "works");
+  t.is(config.nested.deeper.deep_nested_bool, true, "works");
   t.end();
 });
 

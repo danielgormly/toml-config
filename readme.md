@@ -31,7 +31,7 @@ port = 5432
 **config.ts**
 ```typescript
 import { loadToml, validateConfig } from 'toml-config';
-// n.b. config is manually typed and only compared that top-level properties are present.
+/* Manually type config */
 interface Config {
   environment: string
   database: {

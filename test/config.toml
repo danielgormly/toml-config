@@ -5,3 +5,8 @@ bool_false = false
 [nested]
 nested_text = 'yo'
 nested_number = 4
+
+[nested.deeper]
+deep_nested_text = "hello"
+deep_nested_number = 42
+deep_nested_bool = true
