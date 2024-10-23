@@ -1,6 +1,11 @@
 test
 src
-.tsimp
 development.md
 ava.config.js
 .editorconfig
+types/tape
+.editorconfig
+mv.sh
+tsconfig.cjs.json
+tsconfig.esm.json
+tsconfig.json
