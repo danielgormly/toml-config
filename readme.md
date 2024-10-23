@@ -53,3 +53,25 @@ export const config = validateConfig(schema, rawConfig);
 // Relative path to current file
 const rawConfig = loadToml(`file://${__dirname}`, './config.toml');
 ```
+
+## Inferring a type from the schema separately
+You may want to do this to include the schema in functions later.
+
+```typescript
+const schema = {
+  foo: { type: "number" },
+  bar: { type: "string" },
+} satisfies Schema;
+
+type Config = InferConfig<typeof schema>;
+
+const config = {
+  foo: 6,
+  bar: "bo",
+};
+
+function func(config: Config) { // satisfies
+  console.log(config);
+}
+func(config);
+```

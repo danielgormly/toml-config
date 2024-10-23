@@ -9,7 +9,7 @@ interface BaseSchemaOption {
   required?: boolean;
 }
 
-interface ScalarSchemaOption extends BaseSchemaOption {
+export interface ScalarSchemaOption extends BaseSchemaOption {
   type: ScalarType;
   default?: unknown;
 }
@@ -22,7 +22,7 @@ interface ObjectSchemaOption extends BaseSchemaOption {
 
 type SchemaOption = ScalarSchemaOption | ObjectSchemaOption;
 
-type Schema = Record<string, SchemaOption>;
+export type Schema = Record<string, SchemaOption>;
 
 type InferSchemaType<T extends SchemaOption> = T extends ScalarSchemaOption
   ? T["type"] extends "string"
@@ -48,7 +48,7 @@ type InferSchemaType<T extends SchemaOption> = T extends ScalarSchemaOption
       : { [K in keyof T["properties"]]: InferSchemaType<T["properties"][K]> }
     : never;
 
-type InferConfig<T extends Schema> = {
+export type InferConfig<T extends Schema> = {
   [K in keyof T]: InferSchemaType<T[K]>;
 };
 
