@@ -3,27 +3,9 @@ import { loadToml, validateConfig } from "../src/main.js";
 import { parse as parseToml } from "toml";
 
 test("Loading a complex test file", (t) => {
-  interface Config {
-    string: string;
-    number: number;
-    number_2: number;
-    bool_true: boolean;
-    bool_false: boolean;
-    number_missing: number;
-    nested: {
-      nested_text: string;
-      nested_number: number;
-      nested_default: number;
-      deeper: {
-        deep_nested_text: string;
-        deep_nested_number: number;
-        deep_nested_bool: number;
-      };
-    };
-  }
   // Load from file
   const rawConfig = loadToml(import.meta.url, "./config.toml");
-  const config = validateConfig<Config>(
+  const config = validateConfig(
     {
       string: { type: "string" },
       number: { type: "number" },
@@ -53,6 +35,7 @@ test("Loading a complex test file", (t) => {
   t.is(config.string, "string");
   t.is(config.number, 1);
   t.is(config.number_missing, undefined);
+  t.is(config.non_extant, undefined, "Values not defined at all are undefined");
   t.is(config.bool_true, true, "defaults work");
   t.is(config.bool_false, false, "overriding default true with false");
   t.is(config.nested.nested_number, 4, "works?");
@@ -64,12 +47,9 @@ test("Loading a complex test file", (t) => {
 });
 
 test("Invalid type in config", (t) => {
-  interface Config {
-    string: string;
-  }
   const rawConfig = parseToml(`string = 4`);
   try {
-    const config = validateConfig<Config>(
+    const config = validateConfig(
       {
         string: { type: "string" },
       },
@@ -82,12 +62,9 @@ test("Invalid type in config", (t) => {
 });
 
 test("missing item in config", (t) => {
-  interface Config {
-    string: string;
-  }
   const rawConfig = parseToml(`string = 4`);
   try {
-    const config = validateConfig<Config>(
+    const config = validateConfig(
       {
         string: { type: "string" },
       },

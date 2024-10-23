@@ -1,16 +1,13 @@
 # toml-config
 
-A simple, typed package for loading & validating configuration from toml files and validate against a schema. Useful for 12-factor deployments. Only dependency is toml. Toml properties not present in schema are discarded.
+A simple, package for loading & validating toml files and validating against a schema, with static type inference. Useful for configuration app deployments in a 12-factor environment. Only dependency is toml. Properties not present in schema are discarded.
 
-ESM & CJS versions published.
+Both ESM & CJS versions published.
 
 ## Schema definition
 - string
 - number
 - object type supports nested schemas
-
-## Drawbacks
-There is no static type inference on the validator to avoid complexity & dependencies. Therefore config type must be manually typed. Type mistakes therefore are possible in consumption of config. Use [toml](https://www.npmjs.com/package/toml) + [zod](https://zod.dev/), [suretype](https://github.com/grantila/suretype) etc to construct a fully type-safe version yourself. I run many commercial services on this model, avoiding nested config and find this level of safety adequate.
 
 ## Installing
 ```bash
@@ -31,16 +28,6 @@ port = 5432
 **config.ts**
 ```typescript
 import { loadToml, validateConfig } from 'toml-config';
-/* Manually type config */
-interface Config {
-  environment: string
-  database: {
-    host: string,
-    port: number,
-    username: string,
-    password?: string,
-  }
-}
 const schema = {
   string: { type: 'string' },
   database: {
@@ -55,7 +42,7 @@ const schema = {
 };
 // Load config.toml from relative path to current file
 const rawConfig = loadToml(import.meta.url, './config.toml');
-export const config = validateConfig<Config>(schema);
+export const config = validateConfig(schema, rawConfig);
 ```
 
 ## Loading toml in CJS environment using helper

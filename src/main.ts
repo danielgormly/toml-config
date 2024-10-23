@@ -3,62 +3,99 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parse as parseToml } from "toml";
 
-interface ScalarSchemaOption {
-  default?: string | boolean | number;
+type ScalarType = "string" | "boolean" | "number";
+
+interface BaseSchemaOption {
   required?: boolean;
-  type: "string" | "boolean" | "number";
 }
 
-interface SchemaObjectOption
-  extends Omit<ScalarSchemaOption, "type" | "properties" | "default"> {
+interface ScalarSchemaOption extends BaseSchemaOption {
+  type: ScalarType;
+  default?: unknown;
+}
+
+interface ObjectSchemaOption extends BaseSchemaOption {
   type: "object";
-  default?: Record<string, SchemaOption>;
   properties: Record<string, SchemaOption>;
+  default?: Record<string, unknown>;
 }
 
-type SchemaOption = ScalarSchemaOption | SchemaObjectOption;
+type SchemaOption = ScalarSchemaOption | ObjectSchemaOption;
+
+type Schema = Record<string, SchemaOption>;
+
+type InferSchemaType<T extends SchemaOption> = T extends ScalarSchemaOption
+  ? T["type"] extends "string"
+    ? T["required"] extends false
+      ? string | undefined
+      : string
+    : T["type"] extends "boolean"
+      ? T["required"] extends false
+        ? boolean | undefined
+        : boolean
+      : T["type"] extends "number"
+        ? T["required"] extends false
+          ? number | undefined
+          : number
+        : never
+  : T extends ObjectSchemaOption
+    ? T["required"] extends false
+      ?
+          | {
+              [K in keyof T["properties"]]: InferSchemaType<T["properties"][K]>;
+            }
+          | undefined
+      : { [K in keyof T["properties"]]: InferSchemaType<T["properties"][K]> }
+    : never;
+
+type InferConfig<T extends Schema> = {
+  [K in keyof T]: InferSchemaType<T[K]>;
+};
+
 /**
- * @param schema A schema to ensure all values are accounted for
- * @param inputConfig
- * @returns validatedConfig file
- * N.b.: No strict type enforcement, only existence (assumed by interface!)
+ * @param schema: A schema to ensure all values are accounted for
+ * @param config: arbitrary object
+ * @returns validated config object
  */
-export function validateConfig<T>(
-  schema: Record<keyof T, SchemaOption>,
-  inputConfig: any = {},
-): T {
-  const parsed = (Object.keys(schema) as Array<keyof T>).reduce((acc, key) => {
-    const defaultParam = schema[key].default;
+export function validateConfig<T extends Schema>(
+  schema: T,
+  config: any = {},
+): InferConfig<T> {
+  const parsed = Object.keys(schema).reduce((acc, key) => {
+    const schemaOption = schema[key];
+    const inputValue = config[key];
+
     if (
-      !Object.hasOwnProperty.call(inputConfig, key) &&
-      !Object.hasOwnProperty.call(schema[key], "default") &&
-      schema[key].required !== false
+      inputValue === undefined &&
+      schemaOption.required !== false &&
+      !("default" in schemaOption)
+    ) {
+      throw new Error(`Config item ${key} not found. Invalid inputConfig`);
+    }
+
+    const resolvedValue =
+      inputValue !== undefined ? inputValue : schemaOption.default;
+
+    if (schemaOption.type === "object" && typeof resolvedValue === "object") {
+      return {
+        ...acc,
+        [key]: validateConfig(schemaOption.properties, resolvedValue),
+      };
+    }
+
+    if (
+      typeof resolvedValue !== schemaOption.type &&
+      resolvedValue !== undefined
     ) {
       throw new Error(
-        `Config item ${String(key)} not found. Invalid inputConfig`,
+        `Config item ${key} has invalid type. Received ${typeof resolvedValue}, expecting ${schemaOption.type}`,
       );
     }
-    const resolvedConfig = inputConfig[key] ?? defaultParam;
-    if (typeof resolvedConfig !== schema[key].type) {
-      if (!resolvedConfig && schema[key].required === false) {
-        // Undefined but not required
-      } else {
-        // Bad type and required
-        throw new Error(
-          `Config item ${String(key)} has invalid type. Received ${typeof resolvedConfig}, expecting ${schema[key].type}`,
-        );
-      }
-    }
-    if (schema[key].type === "object") {
-      const parsed = validateConfig<any>(
-        schema[key].properties,
-        resolvedConfig,
-      );
-      return { [key]: parsed, ...acc };
-    }
-    return { [key]: resolvedConfig ?? defaultParam, ...acc };
-  }, {});
-  return parsed as T;
+
+    return { ...acc, [key]: resolvedValue };
+  }, {} as InferConfig<T>);
+
+  return parsed;
 }
 
 /**
