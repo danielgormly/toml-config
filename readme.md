@@ -58,6 +58,7 @@ const rawConfig = loadToml(`file://${__dirname}`, './config.toml');
 You may want to do this to include the schema in functions later.
 
 ```typescript
+import { Schema, InferConfig } from 'toml-config';
 const schema = {
   foo: { type: "number" },
   bar: { type: "string" },
