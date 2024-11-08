@@ -35,10 +35,10 @@ const schema = {
   database: {
     type: 'object',
     properties: {
-      host: { type: 'localhost' },
+      host: { type: 'string' },
       port: { type: 'number' },
       username: { type: 'string', default: 'admin' },
-      password: { type: '', required: false },
+      password: { type: 'string', required: false },
     }
   },
 };
