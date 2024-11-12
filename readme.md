@@ -21,7 +21,8 @@ Write a schema, output config type, load toml file, validate & export.
 
 **config.toml**
 ```toml
-environment = "test"
+environment = "dev"
+email = "test@example.com"
 [database]
 host = 'localhost'
 port = 5432
@@ -31,7 +32,8 @@ port = 5432
 ```typescript
 import { loadToml, validateConfig } from 'toml-config';
 const schema = {
-  string: { type: 'string' },
+  environment: { type: 'string' },
+  email: { type: 'string', format: 'email' },
   database: {
     type: 'object',
     properties: {
@@ -46,6 +48,13 @@ const schema = {
 const rawConfig = loadToml(import.meta.url, './config.toml');
 export const config = validateConfig(schema, rawConfig);
 ```
+
+## String format validation
+The 'string' schema option optionally takes a `format` attribute. The following formats are allowed:
+`email`: valid email (n.b. see src/regex.ts)
+`http`: http or https url
+`https`: https only url
+`url`: qualified urls with a tld (e.g. example.com, n.b. localhost will not pass)
 
 ## Loading toml in CJS environment using helper
 

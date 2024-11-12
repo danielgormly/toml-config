@@ -1,4 +1,9 @@
 string = "string"
+email = "daniel.gormly@co"
+http = "http://example.com"
+https = "https://test.com"
+https_required = "https://example.com"
+url = "test.com"
 number = 1
 bool_false = false
 

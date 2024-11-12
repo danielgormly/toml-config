@@ -8,6 +8,11 @@ test("Loading a complex test file", (t) => {
   const config = validateConfig(
     {
       string: { type: "string" },
+      email: { type: "string", format: "email" },
+      http: { type: "string", format: "http" },
+      https: { type: "string", format: "http" },
+      https_required: { type: "string", format: "http" },
+      url: { type: "string", format: "url" },
       number: { type: "number" },
       number_missing: { type: "number", required: false },
       number_2: { type: "number", default: 2 },
@@ -75,3 +80,26 @@ test("missing item in config", (t) => {
   }
   t.end();
 });
+
+const badFormatting = (format: String, badValue: string) =>
+  test(`bad ${format} formatting`, (t) => {
+    const rawConfig = parseToml(`bad_${format} = "${badValue}"`);
+    try {
+      validateConfig(
+        {
+          [`bad_${format}`]: { type: "string", format: format },
+        },
+        rawConfig,
+      );
+    } catch (err) {
+      t.ok(err, `throws correctly due to invalid string ${format}`);
+    }
+    t.end();
+  });
+
+badFormatting("email", "a$a.com");
+badFormatting("http", "ftp://whatever.com");
+badFormatting("http", "ftp");
+badFormatting("https", "http://whatever.com");
+badFormatting("https", "foobar");
+badFormatting("url", "foobar z zzxczx");

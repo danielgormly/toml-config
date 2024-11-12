@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parse as parseToml } from "toml";
+import * as regex from "./regex.js";
 
 type ScalarType = "string" | "boolean" | "number";
 
@@ -14,13 +15,21 @@ export interface ScalarSchemaOption extends BaseSchemaOption {
   default?: unknown;
 }
 
+export interface FormattedStringSchemaOption extends ScalarSchemaOption {
+  type: "string";
+  format: "url" | "http" | "https" | "email";
+}
+
 interface ObjectSchemaOption extends BaseSchemaOption {
   type: "object";
   properties: Record<string, SchemaOption>;
   default?: Record<string, unknown>;
 }
 
-type SchemaOption = ScalarSchemaOption | ObjectSchemaOption;
+type SchemaOption =
+  | ScalarSchemaOption
+  | FormattedStringSchemaOption
+  | ObjectSchemaOption;
 
 export type Schema = Record<string, SchemaOption>;
 
@@ -90,6 +99,42 @@ export function validateConfig<T extends Schema>(
       throw new Error(
         `Config item ${key} has invalid type. Received ${typeof resolvedValue}, expecting ${schemaOption.type}`,
       );
+    }
+
+    if (
+      schemaOption.type === "string" &&
+      "format" in schemaOption &&
+      schemaOption.format
+    ) {
+      const formatOption = schemaOption as FormattedStringSchemaOption;
+      switch (formatOption.format) {
+        case "url":
+          if (!regex.url.test(resolvedValue)) {
+            throw new Error(`${resolvedValue} must be of format url`);
+          }
+          break;
+        case "http":
+          if (!regex.http.test(resolvedValue)) {
+            throw new Error(`${resolvedValue} must be of format http or https`);
+          }
+          break;
+        case "https":
+          if (!regex.https.test(resolvedValue)) {
+            throw new Error(
+              `${resolvedValue} must be of format https (secure)`,
+            );
+          }
+          break;
+        case "email":
+          if (!regex.email.test(resolvedValue)) {
+            throw new Error(`${resolvedValue} must be of format http`);
+          }
+          break;
+        default:
+          throw new Error(
+            `Invalid format ${formatOption.format} for string config item`,
+          );
+      }
     }
 
     return { ...acc, [key]: resolvedValue };
