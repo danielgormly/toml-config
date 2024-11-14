@@ -5,6 +5,7 @@ import { parse as parseToml } from "toml";
 import * as regex from "./regex.js";
 
 type ScalarType = "string" | "boolean" | "number";
+type RealType = string | boolean | number;
 
 interface BaseSchemaOption {
   required?: boolean;
@@ -13,6 +14,7 @@ interface BaseSchemaOption {
 export interface ScalarSchemaOption extends BaseSchemaOption {
   type: ScalarType;
   default?: unknown;
+  secret?: boolean;
 }
 
 export interface FormattedStringSchemaOption extends ScalarSchemaOption {
@@ -34,19 +36,13 @@ type SchemaOption =
 export type Schema = Record<string, SchemaOption>;
 
 type InferSchemaType<T extends SchemaOption> = T extends ScalarSchemaOption
-  ? T["type"] extends "string"
+  ? T["secret"] extends true
     ? T["required"] extends false
-      ? string | undefined
-      : string
-    : T["type"] extends "boolean"
-      ? T["required"] extends false
-        ? boolean | undefined
-        : boolean
-      : T["type"] extends "number"
-        ? T["required"] extends false
-          ? number | undefined
-          : number
-        : never
+      ? SecretKey<InferBaseType<T>> | undefined
+      : SecretKey<InferBaseType<T>>
+    : T["required"] extends false
+      ? InferBaseType<T> | undefined
+      : InferBaseType<T>
   : T extends ObjectSchemaOption
     ? T["required"] extends false
       ?
@@ -57,9 +53,37 @@ type InferSchemaType<T extends SchemaOption> = T extends ScalarSchemaOption
       : { [K in keyof T["properties"]]: InferSchemaType<T["properties"][K]> }
     : never;
 
+// Helper type to infer base types
+type InferBaseType<T extends ScalarSchemaOption> = T["type"] extends "string"
+  ? string
+  : T["type"] extends "boolean"
+    ? boolean
+    : T["type"] extends "number"
+      ? number
+      : never;
+
 export type InferConfig<T extends Schema> = {
   [K in keyof T]: InferSchemaType<T[K]>;
 };
+
+export class SecretKey<T extends RealType> {
+  private static storage = new WeakMap<
+    SecretKey<any>,
+    string | boolean | number
+  >();
+  constructor(value: string | boolean | number) {
+    SecretKey.storage.set(this, value);
+  }
+  reveal(): T {
+    return SecretKey.storage.get(this) as T;
+  }
+  toJSON() {
+    return "REDACTED";
+  }
+  toString() {
+    "REDACTED";
+  }
+}
 
 /**
  * @param schema: A schema to ensure all values are accounted for
@@ -137,7 +161,12 @@ export function validateConfig<T extends Schema>(
       }
     }
 
-    return { ...acc, [key]: resolvedValue };
+    let secret;
+    if ("secret" in schemaOption && schemaOption.secret) {
+      secret = new SecretKey(resolvedValue);
+    }
+
+    return { ...acc, [key]: secret ? secret : resolvedValue };
   }, {} as InferConfig<T>);
 
   return parsed;

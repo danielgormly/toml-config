@@ -18,6 +18,8 @@ test("Loading a complex test file", (t) => {
       number_2: { type: "number", default: 2 },
       bool_true: { type: "boolean", default: true },
       bool_false: { type: "boolean", default: true },
+      secret_number: { type: "number", secret: true },
+      secret_string: { type: "string", secret: true },
       nested: {
         type: "object",
         properties: {
@@ -48,6 +50,11 @@ test("Loading a complex test file", (t) => {
   t.is(config.nested.deeper.deep_nested_text, "hello", "works");
   t.is(config.nested.deeper.deep_nested_number, 42, "works");
   t.is(config.nested.deeper.deep_nested_bool, true, "works");
+  t.is(typeof config.secret_number, "object");
+  t.is(config.secret_number.reveal(), 123);
+  t.is(typeof config.secret_string, "object");
+  t.is(config.secret_string.reveal(), "password");
+  console.log(config);
   t.end();
 });
 

@@ -6,6 +6,8 @@ https_required = "https://example.com"
 url = "test.com"
 number = 1
 bool_false = false
+secret_number = 123
+secret_string = "password"
 
 [nested]
 nested_text = 'yo'

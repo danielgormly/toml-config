@@ -40,7 +40,7 @@ const schema = {
       host: { type: 'string' },
       port: { type: 'number' },
       username: { type: 'string', default: 'admin' },
-      password: { type: 'string', required: false },
+      password: { type: 'string', secret: true, required: false },
     }
   },
 };
@@ -49,12 +49,20 @@ const rawConfig = loadToml(import.meta.url, './config.toml');
 export const config = validateConfig(schema, rawConfig);
 ```
 
+## Secret keys
+To help prevent revealing keys, config items marked as `secret` in the schema will instantiate a SecretKey class instead of hte corresponding scalar value. The value is not stored with the secret itself, and is only accessible via `SecretKey.reveal()`. Accessing the key directly will show the SecretKey object, so hopefully will throw a type error for you when trying to use it.
+
+In the example above, the `database.password` is labelled `secret`. Accessing it is done with `config.database.password.reveal()`.
+
 ## String format validation
 The 'string' schema option optionally takes a `format` attribute. The following formats are allowed:
 `email`: valid email (n.b. see src/regex.ts)
 `http`: http or https url
 `https`: https only url
 `url`: qualified urls with a tld (e.g. example.com, n.b. localhost will not pass)
+
+## Limitations
+- There is currently no support for arrays. PRs welcome.
 
 ## Loading toml in CJS environment using helper
 
