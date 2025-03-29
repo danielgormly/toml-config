@@ -2,7 +2,18 @@ import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parse as parseToml } from "toml";
-import * as regex from "./regex.js";
+
+// https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+export const email =
+  /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+// https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+export const http =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+export const https =
+  /https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+export const url =
+  /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 
 type ScalarType = "string" | "boolean" | "number";
 type RealType = string | boolean | number;
@@ -133,24 +144,24 @@ export function validateConfig<T extends Schema>(
       const formatOption = schemaOption as FormattedStringSchemaOption;
       switch (formatOption.format) {
         case "url":
-          if (!regex.url.test(resolvedValue)) {
+          if (!url.test(resolvedValue)) {
             throw new Error(`${resolvedValue} must be of format url`);
           }
           break;
         case "http":
-          if (!regex.http.test(resolvedValue)) {
+          if (!http.test(resolvedValue)) {
             throw new Error(`${resolvedValue} must be of format http or https`);
           }
           break;
         case "https":
-          if (!regex.https.test(resolvedValue)) {
+          if (!https.test(resolvedValue)) {
             throw new Error(
               `${resolvedValue} must be of format https (secure)`,
             );
           }
           break;
         case "email":
-          if (!regex.email.test(resolvedValue)) {
+          if (!email.test(resolvedValue)) {
             throw new Error(`${resolvedValue} must be of format http`);
           }
           break;
