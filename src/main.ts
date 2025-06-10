@@ -162,7 +162,7 @@ export function validateConfig<T extends Schema>(
           break;
         case "email":
           if (!email.test(resolvedValue)) {
-            throw new Error(`${resolvedValue} must be of format http`);
+            throw new Error(`${resolvedValue} must be of format email`);
           }
           break;
         default:
