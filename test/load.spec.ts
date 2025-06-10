@@ -36,7 +36,7 @@ test("Loading a complex test file", (t) => {
           },
         },
       },
-    },
+    } as const,
     rawConfig,
   );
   t.is(config.string, "string");
@@ -64,7 +64,7 @@ test("Invalid type in config", (t) => {
     const config = validateConfig(
       {
         string: { type: "string" },
-      },
+      } as const,
       rawConfig,
     );
   } catch (err) {
@@ -79,7 +79,7 @@ test("missing item in config", (t) => {
     const config = validateConfig(
       {
         string: { type: "string" },
-      },
+      } as const,
       rawConfig,
     );
   } catch (err) {
@@ -95,7 +95,7 @@ const badFormatting = (format: String, badValue: string) =>
       validateConfig(
         {
           [`bad_${format}`]: { type: "string", format: format },
-        },
+        } as const,
         rawConfig,
       );
     } catch (err) {

@@ -43,7 +43,7 @@ const schema = {
       password: { type: 'string', secret: true, required: false },
     }
   },
-};
+} as const;
 // Load config.toml from relative path to current file
 const rawConfig = loadToml(import.meta.url, './config.toml');
 export const config = validateConfig(schema, rawConfig);
